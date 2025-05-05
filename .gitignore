@@ -1,0 +1,5 @@
+/newenv/
+/__pycache__/
+/venv/
+*.csv
+paifu_txt

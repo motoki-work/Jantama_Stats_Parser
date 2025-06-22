@@ -17,6 +17,9 @@ yaku_id_to_name = {
 }
 
 temp_kui_sagari_ids = {15, 16, 17, 26, 27, 29}
+dora_count = Counter()
+aka_dora_count = Counter()
+ura_dora_count = Counter()
 
 def process_directory(directory):
     agari_counter = defaultdict(list)
@@ -105,14 +108,19 @@ def process_directory(directory):
                                         fan_name = yaku_id_to_name.get(fan_id, f"不明ID:{fan_id}")
                                         fan_val = fan.get("val", 0)
                                         kui_sagari = "あり" if fan_id in temp_kui_sagari_ids and ming_count > 0 else "なし"
-                                        if fan_name == "裏ドラ" and fan_val == 0:
-                                            continue
                                         if fan_id == 1:
                                             menzen_count[actor_uid] += 1
                                         if fan_id == 2:
                                             reach_count[actor_uid] += 1
+                                        if fan_id == 31:
+                                            dora_count[actor_uid] += fan_val
+                                        elif fan_id == 32:
+                                            aka_dora_count[actor_uid] += fan_val
+                                        elif fan_id == 33:
+                                            ura_dora_count[actor_uid] += fan_val
                                         if kui_sagari == "あり":
                                             fan_name = fan_name + "[食下り]"
+                                        # 「ドラ」系役は val が 0 の場合があるので除外しない
                                         agari_counter[actor_uid].append((fan_id, fan_name, fan_val, kui_sagari, "あり" if menqing else "なし", ming_count))
                                         total_han += fan_val
 
@@ -136,6 +144,7 @@ def process_directory(directory):
                                 else:
                                     target_uid = "N/A"
                                 target_name = uid_to_name.get(target_uid, "N/A")
+                                
                                 agari_point_summary.append({
                                     "アカウントID": actor_uid,
                                     "ユーザー名": uid_to_name.get(actor_uid, f"NPC{actor_seat}"),
